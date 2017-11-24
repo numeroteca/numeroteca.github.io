@@ -1,6 +1,11 @@
+//Prepare canvas size
+isMobile = innerWidth < 758;
+
+var screenwidth = d3.select("#cartogram").node().clientWidth;
+
 var margin = {top: 10, right: 10, bottom: 10, left:0},
-    width = 900- margin.left - margin.right,
-    height = 750 - margin.top - margin.bottom,
+    width = (isMobile ? screenwidth : innerWidth) - margin.left - margin.right,
+    height = 710 - margin.top - margin.bottom,
     padding = 2;
 
 //var projection = d3.geoConicConformalSpain()
