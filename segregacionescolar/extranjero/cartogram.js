@@ -4,7 +4,7 @@ isMobile = innerWidth < 758;
 var screenwidth = d3.select("#cartogram").node().clientWidth;
 
 var margin = {top: 10, right: 10, bottom: 10, left:0},
-    width = (isMobile ? screenwidth : innerWidth) - margin.left - margin.right,
+    width = (isMobile ? (screenwidth+100) : 900) - margin.left - margin.right,
     height = 710 - margin.top - margin.bottom,
     padding = 2;
 
@@ -225,6 +225,56 @@ var path = d3.geoPath()
         tooltip.style("opacity", 0)
       }
 
+  // Assign a listener to the resize event
+  window.onresize = resize;
+
+  function resize() {
+    // Update width & height
+    width = d3.select("#cartogram").node().clientWidth - margin.left - margin.right,
+    height = width - margin.top - margin.bottom;
+
+    // Update scales
+    x.range([0, width]);
+    y.range([height, 0]);
+
+    // Update SVG
+    d3.selectAll("svg")
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right);
+
+
+  // Rect size scale
+    rectSize.domain(d3.extent(barrio, function(d) {return d.properties.perc_alum_ext_todos }))
+
+    // 2. Create on each feature the centroid and the positions
+    barrio.forEach(function(d) {
+        d.pos = projection(d3.geoCentroid(d))
+        d.x = d.pos[0]
+        d.y = d.pos[1]
+        d.area = rectSize(d.properties.total_alumnado) / 20 // Select how to scale the squares. Try and decide
+      // d.area = rectSize(d.properties.habitantes2015) / 2 // How we scale
+    })
+
+    // Font size scale
+    fontSize.domain(d3.extent(barrio, function(d) {return d.area }))
+
+    // 3. Collide force
+    var simulation = d3.forceSimulation(barrio)
+        .force("x", d3.forceX(function(d) { return d.pos[0] }).strength(.1))
+        .force("y", d3.forceY(function(d) { return d.pos[1] }).strength(.1))
+        .force("collide", collide)
+
+
+
+
+
+
+
+
+
+
+
+  }
 })
 
 // From http://bl.ocks.org/mbostock/4055889
