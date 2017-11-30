@@ -10,7 +10,8 @@ var margin = {top: 0, right: 0, bottom: 0, left: 0},
     width = 1100 - margin.left - margin.right,
     ratio = 1,
     height = width*ratio - margin.top - margin.bottom,
-    padding = 3;
+    margen = 14,
+    padding = 4;
 var square = 70
 
 // Rectangle size
@@ -21,8 +22,11 @@ var rectSize = d3.scaleSqrt()
 
 // Line size
 var lineSize = d3.scaleLinear()
-		.domain([0,42])
-    .range([0,square])
+		.domain([0,72])
+    .range([0,square-margen])
+var lineSizeBeca = d3.scaleLinear()
+		.domain([0,72])
+    .range([0,square-margen])
 
 // Font size scale
 var fontSize = d3.scaleLinear()
@@ -49,7 +53,7 @@ var svg = d3.select("#cartogram").append("svg")
 //Adds Background image
 var background = svg.append('g').attr('id','backgroundimage');
 background.append("image")
-	.attr("xlink:href", "../images/leyenda-flechas-segregacion-extranjeros-red-pub-priv-euskadi.png")
+	.attr("xlink:href", "../images/leyenda-flechas-segregacion-todas-red-pub-priv-euskadi.png")
 	.attr("x", width-500)
 	.attr("y", -80)
 	.attr("width", "400")
@@ -178,11 +182,92 @@ var path = d3.geoPath()
         .attr("transform", function(d) { return "translate(" + (d.x - square/2) + "," + d.y + ")" })
           .on("mousemove", showTooltip) // AÑADIR EVENTO SHOW TOOLTIP
 					.on("mouseout", hideTooltip) // OCULTAR TOOLTIP
-
+		
+		// Becas Material escolar
 		arrows.append("line")
 		  .each(function(d) {
 		  		var desigualdad = (d.properties.indice_desigualdad == null ) ? 0 : d.properties.indice_desigualdad;
-					var value = lineSize(d.properties.perc_alum_ext_priv);
+		  		if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+		  			value = 0;
+		  		}
+		      d3.select(this)
+		        .attr("width", square)
+		        .attr("height", square)
+		        .attr("x1", lineSizeBeca(d.properties.perc_bec_mat_escolar_pub))
+		        .attr("y1", - square/2 + 25)
+		        .attr("x2", lineSizeBeca(d.properties.perc_bec_mat_escolar_priv))
+		        .attr("y2", - square/2 + 25)
+		        .attr("marker-end", function(d) {
+				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+							endMarker = "";
+							} else { endMarker = "url(#markerCirclePriv)" }
+				      return endMarker;
+				      }
+		        )
+		        .attr("marker-start","url(#markerCircle)")
+		        .attr("fill","#bd0017")
+		        .attr("stroke-opacity","0.7")
+		        .attr("stroke", function(d) {
+		          var desigualdad = (d.properties.indice_desigualdad == null ) ? "--" : d.properties.indice_desigualdad;
+							if  ( desigualdad == "--" ) {
+								desigualdad = "--";
+								color = "#EEE";
+							} else if ( (d.properties.perc_bec_mat_escolar_pub - d.properties.perc_bec_mat_escolar_priv) > 0 ) {
+								desigualdad = d.properties.indice_desigualdad;
+								color = "#bd0017";
+							} else {
+								desigualdad = d.properties.indice_desigualdad;
+								color = "#00F";
+							}
+		      		return color;
+		        })
+		        .attr("stroke-width", 4)
+		      })
+
+		// Becas comedor
+		arrows.append("line")
+		  .each(function(d) {
+		  		var desigualdad = (d.properties.indice_desigualdad == null ) ? 0 : d.properties.indice_desigualdad;
+		  		if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+		  			value = 0;
+		  		}
+		      d3.select(this)
+		        .attr("width", square)
+		        .attr("height", square)
+		        .attr("x1", lineSizeBeca(d.properties.perc_bec_comedor_pub))
+		        .attr("y1", - square/2 + 45)
+		        .attr("x2", lineSizeBeca(d.properties.perc_bec_comedor_priv))
+		        .attr("y2", - square/2 + 45)
+		        .attr("marker-end", function(d) {
+				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+							endMarker = "";
+							} else { endMarker = "url(#markerCirclePriv)" }
+				      return endMarker;
+				      }
+		        )
+		        .attr("marker-start","url(#markerCircle)")
+		        .attr("fill","#bd0017")
+		        .attr("stroke-opacity","0.7")
+		        .attr("stroke", function(d) {
+		          var desigualdad = (d.properties.indice_desigualdad == null ) ? "--" : d.properties.indice_desigualdad;
+							if  ( desigualdad == "--" ) {
+								desigualdad = "--";
+								color = "#EEE";
+							} else if ( (d.properties.perc_bec_comedor_pub - d.properties.perc_bec_comedor_priv) > 0 ) {
+								desigualdad = d.properties.indice_desigualdad;
+								color = "#bd0017";
+							} else {
+								desigualdad = d.properties.indice_desigualdad;
+								color = "#00F";
+							}
+		      		return color;
+		        })
+		        .attr("stroke-width", 4)
+		      })
+		// Extranjeros
+		arrows.append("line")
+		  .each(function(d) {
+		  		var desigualdad = (d.properties.indice_desigualdad == null ) ? 0 : d.properties.indice_desigualdad;
 		  		if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
 		  			value = 0;
 		  		}
@@ -190,9 +275,9 @@ var path = d3.geoPath()
 		        .attr("width", square)
 		        .attr("height", square)
 		        .attr("x1", lineSize(d.properties.perc_alum_ext_publi))
-		        .attr("y1", 25)
-		        .attr("x2", value)
-		        .attr("y2", 25)
+		        .attr("y1", 30)
+		        .attr("x2",lineSize(d.properties.perc_alum_ext_priv))
+		        .attr("y2", 30)
 		        .attr("class", Math.abs(d.properties.perc_alum_ext_publi - d.properties.perc_alum_ext_priv))
 		        .attr("marker-end", function(d) {
 				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
@@ -208,7 +293,7 @@ var path = d3.geoPath()
 		          var desigualdad = (d.properties.indice_desigualdad == null ) ? "--" : d.properties.indice_desigualdad;
 							if  ( desigualdad == "--" ) {
 								desigualdad = "--";
-								color = "#CCC";
+								color = "#EEE";
 							} else if ( desigualdad > 1 ) {
 								desigualdad = d.properties.indice_desigualdad;
 								color = "#bd0017";
@@ -220,7 +305,6 @@ var path = d3.geoPath()
 		        })
 		        .attr("stroke-width", 4)
 		      })
-
   rect.append("rect")
         .each(function(d) {
             d3.select(this)
@@ -230,17 +314,17 @@ var path = d3.geoPath()
               .attr("y", -square / 2)
               //.attr("x", -d.area / 2)
               //.attr("y", -d.area / 2)
-              .attr("fill", function(d) {
+              /*.attr("fill", function(d) {
 		            if  ( d.properties.indice_desigualdad == null)  {
 									return "#CCC";
 								} else {
 									return colorTot(d.properties.perc_alum_ext_todos)
 								}
-							})
-							//.attr("fill", "#eee")
+							})*/
+							.attr("fill", "#eee")
               .attr("stroke", "#fff")
               .attr("stroke-width", 1)
-              .attr("rx", 0.5)
+              .attr("rx", 0.7)
           })
 
 /*	    rect2.append("rect")
@@ -268,28 +352,89 @@ var path = d3.geoPath()
 			//var zona = ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) ? " " : d.properties.zona;
 			d3.select(this)
 				.attr("text-anchor", "left")
-				.attr("dy", 12)
+				.attr("dy", -square/2 + 14)
 				.attr("dx", "4px")
 				.text( function(d) {
 					var punto = (d.properties.zona.length > 10)? "." : "";
 					return d.properties.zona.substring(0,10) + punto;
 					})
 				.style("fill", "black")
-				.style("font-size", "13px");
+				.style("font-size", "13px")
+				.attr("pointer-events","none");
 		})
-		// texto diferencia
+
+		// texto diferencia 1: Material escolar
     arrows.append("text")
       .each(function(d) {
 				var zona = ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) ? " " : d.properties.zona;
         d3.select(this)
-          .attr("text-anchor", "middle")
-		      .attr("dy", -13)
-		      .attr("dx", square/2-4)
+          .attr("text-anchor", "end")
+		      .attr("dy", - square/2 + 29)
+		      .attr("dx", square)
 		      .text(
 		      function(d) {
 				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
-							texto = "";
-							} else { texto = d3.format(",.0f")(d.properties.perc_alum_ext_publi - d.properties.perc_alum_ext_priv) + "%" }
+								texto = "";
+							} else { 
+								texto = 
+									d3.format(",.0f")(d.properties.perc_bec_mat_escolar_pub - d.properties.perc_bec_mat_escolar_priv)
+							}
+				      return texto;
+				      }
+		      )
+		      .style("fill", function(d) {
+						var priv = (d.properties.perc_bec_mat_escolar_priv == null ) ? 0 : d.properties.perc_bec_mat_escolar_priv;
+						var pub = (d.properties.perc_bec_mat_escolar_pub == null ) ? 0 : d.properties.perc_bec_mat_escolar_pub;
+						var colora = ((pub - priv) > 0 ) ? "#bd0017" : "blue";
+						return colora;
+						}
+		      )
+		      .style("font-size", "10px")
+		      })
+		// texto diferencia 2
+    arrows.append("text")
+      .each(function(d) {
+				var zona = ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) ? " " : d.properties.zona;
+        d3.select(this)
+          .attr("text-anchor", "end")
+		      .attr("dy", - square/2 + 49)
+		      .attr("dx", square)
+		      .text(
+		      function(d) {
+				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+								texto = "";
+							} else { 
+								texto = 
+									d3.format(",.0f")(d.properties.perc_bec_comedor_pub - d.properties.perc_bec_comedor_priv)
+							}
+				      return texto;
+				      }
+		      )
+		      .style("fill", function(d) {
+						var priv = (d.properties.perc_bec_comedor_priv == null ) ? 0 : d.properties.perc_bec_comedor_priv;
+						var pub = (d.properties.perc_bec_comedor_pub == null ) ? 0 : d.properties.perc_bec_comedor_pub;
+						var colora = ((pub - priv) > 0 ) ? "#bd0017" : "blue";
+						return colora;
+						}
+		      )
+		      .style("font-size", "10px")
+		      })
+		// texto diferencia 3: extranjero
+    arrows.append("text")
+      .each(function(d) {
+				var zona = ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) ? " " : d.properties.zona;
+        d3.select(this)
+          .attr("text-anchor", "end")
+		      .attr("dy", 34)
+		      .attr("dx", square)
+		      .text(
+		      function(d) {
+				      if ( d.properties.zona == "Igorre" || d.properties.zona == "Montaña alavesa" || d.properties.zona == "Basurto-Zorroza" ) {
+								texto = "";
+							} else { 
+								texto = 
+									d3.format(",.0f")(d.properties.perc_alum_ext_publi - d.properties.perc_alum_ext_priv)
+							}
 				      return texto;
 				      }
 		      )
@@ -299,7 +444,7 @@ var path = d3.geoPath()
 						return colora;
 						}
 		      )
-		      .style("font-size", "14px")
+		      .style("font-size", "10px")
 		      })
 		// % de red pública
 /*    arrows.append("text")
@@ -352,23 +497,23 @@ var path = d3.geoPath()
 
           tooltip.html("<div class='table-responsive'><strong>" + d.properties.zona + "</strong> (zona escolar " + d.properties.zona_id2 + ", " + d.properties.provincia + ")</div>" +
             "<table class='table table-condensed'>" +
+               "<tr>" +
+                    "<td style='text-align:right;color:#bd0017'><strong>"+ d.properties.perc_bec_mat_escolar_pub  +"%</strong></td><td>alumnado becado material escolar en la red <strong>pública</strong></td>" +
+                "</tr>" +
+                 "<tr>" +
+                    "<td style='text-align:right;color:#00F'><strong>"+ d.properties.perc_bec_mat_escolar_priv +"%</strong></td><td>alumnado becado material escolar en la red <strong>privado-concertada</strong></td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td style='text-align:right;color:#bd0017'><strong>"+ d.properties.perc_bec_comedor_pub  +"%</strong></td><td>alumnado becado comedor en la red <strong>pública</strong></td>" +
+                "</tr>" +
+                 "<tr>" +
+                    "<td style='text-align:right;color:#00F'><strong>"+ d.properties.perc_bec_comedor_priv +"%</strong></td><td>alumnado becado comedor en la red <strong>privado-concertada</strong></td>" +
+                "</tr>" +
                 "<tr>" +
                     "<td style='text-align:right;color:#bd0017'><strong>"+ d.properties.perc_alum_ext_publi  +"%</strong></td><td>alumnado es extranjero en la red <strong>pública</strong></td>" +
                 "</tr>" +
                  "<tr>" +
                     "<td style='text-align:right;color:#00F'><strong>"+ privado +"%</strong></td><td>alumnado es extranjero en la red <strong>privado-concertada</strong></td>" +
-                "</tr>" +
-								"<tr>" +
-                    "<td style='text-align:right'>"+ d.properties.perc_alum_ext_todos +"%</td><td>alumnado es extranjero de media</td>" +
-                "</tr>" +
-								"<tr style='background-color:" + color + "'>" +
-                    "<td style='text-align:right'><strong>"+ diferencia +"</strong></td><td>diferencia % ("+ diferencia_explica + ")</td>" +
-                "</tr>" +
-                "<tr>" +
-                    "<td style='text-align:right'>"+ desigualdad +"</td><td>índice desigualdad extranjeros (" + cociente + ")</td>" +
-                "</tr>" +
-                "<tr>" +
-                    "<td style='text-align:right'>"+ d.properties.alum_ext_total +"</td><td>total alumnado extranjero</td>" +
                 "</tr>" +
 								"<tr>" +
                     "<td style='text-align:right'>"+ d.properties.total_alumnado +"</td><td> alumnado</td>" +
