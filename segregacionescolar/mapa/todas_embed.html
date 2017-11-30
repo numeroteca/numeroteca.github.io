@@ -93,80 +93,10 @@ rect {
 <link type="image/png" sizes="256x256" href="../favicon.png" rel="icon" />
 </head>
 <body>
-<header role="banner">
-	<nav id="top-navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false">
-				<span class="sr-only">mostrar/ocultar menú</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="https://lab.montera34.com/segregacionescolar/">Segregación escolar Euskadi/</a> <a class="navbar-brand" href="#">Comparativa variables</a>
-		</div>
-		<div class="collapse navbar-collapse" id="top-navbar-collapse">
-			<ul class="nav navbar-nav nabvar-left">
-				<li><a href="../index.html">Comparativa indicadores</a></li>
-			</ul>
-		</div>
-	</div>
-	</nav>
-</header>
 
-<main class="container">
-	<section class="vis-item" id="interactivo">
-		<header class="row vis-head">
-			<div class="col-md-9">
-				<h1>Comparativa variables en redes pública y privado-concertada en zonas escolares de Euskadi</h1>
-			</div>
-		</header>
-		<div class="row vis-body">
-			<div class="col-md-6">
-				<p>Se considera extranjera a una persona nacida fuera de España.</p>
-				<p class="bg-warning"><span class="glyphicon glyphicon glyphicon-hand-up" aria-hidden="true"></span> Pasa el cursor para descubrir más información sobre cada zona.</p>
-			</div>
-			<div class="col-md-12">
-				<div id="cartogram"></div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<p><small>Datos del curso 2014-2015 para Educación básica (educación primaria y ESO).</small></p>
-				<p><small>Fuente de los datos: La educación Euskadi 2013-2015. Consejo Escolar de Euskadi. Departamento de educación. Gobierno Vasco. Vitoria-Gasteiz, 2016.</small></p>
-			</div>
-		</div>
-			
+<main>
+	<div id="cartogram"></div>
 </main>
-
-<footer id="bottom">
-	<div class="container">
-	<div class="row">
-		<div class="col-md-3">
-			<ul class="list-inline">
-				<li><img src="../images/m34.logo.png" alt="Logo Montera34" /></li>
-			</ul>
-			<p><small>Estas visualizaciones han sido realizadas por Montera34. El proyecto es una iniciativa de la <a href="https://www.ilpeskolainklusiboa.eus/es/">ILP Eskola Inklusivoa</a>.</small></p>
-		</div>
-		<div class="col-md-3">
-			<p><img src="../images/cc.logo.png" alt="Logos Creative Commons" /></p>
-			<p><small>El contenido de los informes está disponible bajo licencia <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.</small></p>
-		</div>
-		<div class="col-md-3">
-			<p><img src="../images/code.logo.png" alt="Logo código" /></p>
-			<p><small>Los datos de estas visualizaciones han sido obtenidos a partir de PDF, limpiados, liberados y <a href="https://github.com/montera34/segregacion/tree/master/data">pueden descargarse</a>. <br>El código de este informe está igualmente <a href="https://github.com/montera34/segregacion/">disponible bajo licencia GNU GPL3</a>.</small></p>
-		</div>
-		<div class="col-md-3">
-			<p><img src="../images/net.logo.png" alt="Logo red" /></p>
-			<p><small>Más visualizaciones:</small></p>
-			<ul class="list-unstyled">
-				<li><small><a href="http://lab.montera34.com/segregacionescolar/">Comparativa indicadores</a></small></li>
-			</ul>
-		</div>
-
-	</div>
-	</div>
-</footer>
 
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
